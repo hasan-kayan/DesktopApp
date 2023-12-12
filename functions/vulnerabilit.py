@@ -1,6 +1,7 @@
 import socket
 import requests
 from pysnmp.hlapi import *
+from datetime import datetime
 
 def vulnerability_scan(target_ip, target_port):
     vulnerabilities = []
@@ -117,3 +118,31 @@ def check_snmp_security(device_ip, snmp_community):
 # snmp_community = "public"  # SNMP topluluk adını değiştirin
 
 # check_snmp_security(device_ip, snmp_community)
+
+def ssl_check(url):
+    try:
+        response = requests.get(url, timeout=5, verify=True)
+        
+        # Sertifika bilgilerini al
+        cert_info = response.connection.sock.getpeercert()
+
+        # Sertifika son kullanma tarihini al
+        expiration_date = datetime.strptime(cert_info['notAfter'], '%b %d %H:%M:%S %Y %Z')
+        
+        # Şu anki tarih ile karşılaştır
+        if expiration_date > datetime.now():
+            print("SSL/TLS Certificate is valid.")
+            print(f"Expiration Date: {expiration_date}")
+            return True
+        else:
+            print("SSL/TLS Certificate has expired.")
+            print(f"Expiration Date: {expiration_date}")
+            return False
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return False
+
+# # Kullanım örneği:
+# website_url = "https://example.com"  # Hedef web sitesinin URL'sini değiştirin
+
+# ssl_check(website_url)
