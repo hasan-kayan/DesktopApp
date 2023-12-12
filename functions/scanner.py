@@ -56,15 +56,15 @@ def find_devices_in_network(network):
 
 # found_devices = find_devices_in_network(network_to_scan)
 
-# 
-print("Started")
-network_to_scan = "192.168.1.0/24" 
-print("Scanning devices")
-found_devices = find_devices_in_network(network_to_scan)
-print("scanned")
-if found_devices:
-    print("Found devices in the network:")
-    for device in found_devices:
-        print("- ", device)
-else:
-    print("No devices found in the network.")
+# # 
+# print("Started")
+# network_to_scan = "192.168.1.0/24" 
+# print("Scanning devices")
+# found_devices = find_devices_in_network(network_to_scan)
+# print("scanned")
+# if found_devices:
+#     print("Found devices in the network:")
+#     for device in found_devices:
+#         print("- ", device)
+# else:
+#     print("No devices found in the network.")
