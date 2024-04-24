@@ -1,0 +1,25 @@
+{
+  "name": "desktopapp",
+  "version": "1.0.0",
+  "description": "A desktop application which is also be usefull for flash disks",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hasan-kayan/DesktopApp.git"
+  },
+  "keywords": [
+    "ElectronJs",
+    "DesktopApp",
+    "RemoteSystem",
+    "Security"
+  ],
+  "author": "Hasan Kayan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hasan-kayan/DesktopApp/issues"
+  },
+  "homepage": "https://github.com/hasan-kayan/DesktopApp#readme"
+}
