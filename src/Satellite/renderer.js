@@ -1,58 +1,50 @@
-const THREE = require("three");
-require("three/examples/js/controls/OrbitControls");
-require("three/examples/js/loaders/OBJLoader");
-require("three/examples/js/grid-helper");
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/OBJLoader.js';
 
-let scene, camera, renderer, controls;
+let scene, camera, renderer;
 
 function init() {
-  console.log("Hello from renderer.js");
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x121212); // Match background color
-
-  camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-  camera.position.z = 5;
-
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  document.getElementById('container').appendChild(renderer.domElement);
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-  const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+  // Add a basic light
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambientLight);
+  const pointLight = new THREE.PointLight(0xffffff, 1);
+  pointLight.position.set(10, 10, 10);
+  scene.add(pointLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  directionalLight.position.set(1, 1, 0).normalize();
-  scene.add(directionalLight);
+  // Load the OBJ file
+  const loader = new OBJLoader();
+  loader.load(
+    './model/satellite_obj.obj', // Replace with the path to your OBJ file
+    function (object) {
+      scene.add(object);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    function (error) {
+      console.error('An error happened', error);
+    }
+  );
 
-  const objLoader = new THREE.OBJLoader();
-  objLoader.load("model/satellite_obj.obj", (object) => {
-    scene.add(object);
-  });
-  const gridHelper = new THREE.GridHelper(10, 10);
-  scene.add(gridHelper);
-
-  window.addEventListener("resize", onWindowResize, false);
-
-  animate();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.position.z = 5;
 }
 
 function animate() {
   requestAnimationFrame(animate);
-  controls.update();
   renderer.render(scene, camera);
 }
 
+window.addEventListener('resize', function() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 init();
+animate();

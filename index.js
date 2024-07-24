@@ -7,10 +7,14 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'renderer.js'),
-      contextIsolation: false,
-      nodeIntegration: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      sandbox: true,
     },
   });
+  
+  win.webContents.openDevTools()
 
   // Load the main HTML file, adjust as needed for different pages
   win.loadFile('index.html');
