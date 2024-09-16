@@ -1,0 +1,7 @@
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/CMakeFiles/device_scanner.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/CMakeFiles/device_scanner_test.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/CMakeFiles/edit_cache.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/CMakeFiles/rebuild_cache.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/port_scanner_build/CMakeFiles/port_scanner.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/port_scanner_build/CMakeFiles/edit_cache.dir
+/Users/hasankayan/Desktop/DesktopApp/device_scanner/build/port_scanner_build/CMakeFiles/rebuild_cache.dir
