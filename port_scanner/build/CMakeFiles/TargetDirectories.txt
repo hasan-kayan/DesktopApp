@@ -1,0 +1,4 @@
+/Users/hasankayan/Desktop/DesktopApp/port_scanner/build/CMakeFiles/port_scanner.dir
+/Users/hasankayan/Desktop/DesktopApp/port_scanner/build/CMakeFiles/test_port_scanner.dir
+/Users/hasankayan/Desktop/DesktopApp/port_scanner/build/CMakeFiles/edit_cache.dir
+/Users/hasankayan/Desktop/DesktopApp/port_scanner/build/CMakeFiles/rebuild_cache.dir
