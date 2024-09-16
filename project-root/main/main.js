@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const { list } = require('@serialport/list');
 
 let mainWindow;
 
@@ -9,9 +10,11 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
+      nodeIntegration: false,
+      contextIsolation: true,  // To secure IPC
+      enableRemoteModule: false,
+      sandbox: false,
     },
-    icon: path.join(__dirname, '../public/Assets/logo.png') // Path to your custom icon
   });
 
   mainWindow.loadFile(path.join(__dirname, '../public/index.html'));
@@ -20,6 +23,16 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+// Handle IPC request from renderer for port list
+ipcMain.handle('get-ports', async () => {
+  try {
+    const ports = await list();  // Fetch the list of ports
+    return ports;
+  } catch (error) {
+    return { error: error.message };
+  }
+});
 
 app.on('ready', createWindow);
 

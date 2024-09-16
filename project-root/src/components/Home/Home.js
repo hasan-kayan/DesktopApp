@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './Home.css';
+import PortLister from '../PortLister/PortLister';
 
 const Home = () => {
   return (
     <div>
       <h1>Welcome to the Electron React App</h1>
+      <PortLister />
     </div>
   );
 };
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+export default Home;
