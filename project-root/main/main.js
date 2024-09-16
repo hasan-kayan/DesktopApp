@@ -11,6 +11,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
     },
+    icon: path.join(__dirname, '../public/Assets/logo.png') // Path to your custom icon
   });
 
   mainWindow.loadFile(path.join(__dirname, '../public/index.html'));
