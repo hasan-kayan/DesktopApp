@@ -1,23 +1,47 @@
-import graph_creator
-import numpy as np  # Add this at the top of the file
+import pyqtgraph as pg
+import pyqtgraph.opengl as gl
+import numpy as np
+from pyqtgraph.Qt import QtWidgets
 
-# 2D graph
-graph_2d = graph_creator.Graph2D("Live 2D Sine Wave")
-x_data = np.linspace(0, 2 * np.pi, 100)
-y_data = np.sin(x_data)
-graph_2d.set_data(x_data, y_data)
+class Graph3D:
+    def __init__(self, title="3D Graph"):
+        self.app = QtWidgets.QApplication([])
+        self.view = gl.GLViewWidget()
+        self.view.setWindowTitle(title)
+        self.view.setCameraPosition(distance=40)  # Adjust the distance for a good 3D view
+        self.view.show()
 
-# Dynamically update the graph
-for i in range(100):
-    y_data = np.sin(x_data + i / 10.0)
-    graph_2d.update_graph(x_data, y_data)
+        # Create a grid on the 3D view
+        self.grid = gl.GLGridItem()
+        self.grid.scale(2, 2, 1)
+        self.view.addItem(self.grid)
 
-graph_2d.start()
+        # Store scatter plot object
+        self.scatter_plot = None
 
-# 3D graph
-graph_3d = graph_creator.Graph3D("Random 3D Points")
-x_data = np.random.rand(100)
-y_data = np.random.rand(100)
-z_data = np.random.rand(100)
-graph_3d.set_data(x_data, y_data, z_data)
-graph_3d.start()
+    def set_data(self, x_data, y_data, z_data):
+        """Sets new 3D data to the graph."""
+        pos = np.vstack([x_data, y_data, z_data]).transpose()
+        if self.scatter_plot is None:
+            self.scatter_plot = gl.GLScatterPlotItem(pos=pos, size=5, color=(1, 1, 1, 1), pxMode=False)
+            self.view.addItem(self.scatter_plot)
+        else:
+            self.scatter_plot.setData(pos=pos)
+
+    def update_graph(self, x_data, y_data, z_data):
+        """Updates the graph dynamically with new data."""
+        self.set_data(x_data, y_data, z_data)
+        QtWidgets.QApplication.processEvents()  # Keep the GUI responsive
+
+    def start(self):
+        """Starts the application loop."""
+        self.app.exec_()
+
+# Test the 3D graph directly
+if __name__ == "__main__":
+    graph = Graph3D("Random 3D Points")
+    x = np.random.rand(100)
+    y = np.random.rand(100)
+    z = np.random.rand(100)
+    graph.set_data(x, y, z)
+    graph.start()
