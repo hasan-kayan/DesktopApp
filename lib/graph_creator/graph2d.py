@@ -22,11 +22,3 @@ class Graph2D:
     def start(self):
         """Starts the application loop."""
         self.app.exec_()
-
-# Example usage
-if __name__ == "__main__":
-    graph = Graph2D("Dynamic 2D Graph")
-    x = np.linspace(0, 10, 100)
-    y = np.sin(x)
-    graph.set_data(x, y)
-    graph.start()

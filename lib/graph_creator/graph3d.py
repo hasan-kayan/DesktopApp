@@ -4,11 +4,11 @@ import numpy as np
 from pyqtgraph.Qt import QtWidgets
 
 class Graph3D:
-    def __init__(self, title="3D Graph"):
+    def __init__(self, title="3D Line Graph"):
         self.app = QtWidgets.QApplication([])
         self.view = gl.GLViewWidget()
         self.view.setWindowTitle(title)
-        self.view.setCameraPosition(distance=40)  # Adjust the distance for a good 3D view
+        self.view.setCameraPosition(distance=40)  # Adjust camera distance for a good 3D view
         self.view.show()
 
         # Create a grid on the 3D view
@@ -16,17 +16,18 @@ class Graph3D:
         self.grid.scale(2, 2, 1)
         self.view.addItem(self.grid)
 
-        # Store scatter plot object
-        self.scatter_plot = None
+        # Store the line plot object
+        self.line_plot = None
 
     def set_data(self, x_data, y_data, z_data):
-        """Sets new 3D data to the graph."""
+        """Sets new 3D line data to the graph."""
         pos = np.vstack([x_data, y_data, z_data]).transpose()
-        if self.scatter_plot is None:
-            self.scatter_plot = gl.GLScatterPlotItem(pos=pos, size=5, color=(1, 1, 1, 1), pxMode=False)
-            self.view.addItem(self.scatter_plot)
+        if self.line_plot is None:
+            # Create a 3D line plot
+            self.line_plot = gl.GLLinePlotItem(pos=pos, color=(1, 1, 1, 1), width=2, antialias=True)
+            self.view.addItem(self.line_plot)
         else:
-            self.scatter_plot.setData(pos=pos)
+            self.line_plot.setData(pos=pos)
 
     def update_graph(self, x_data, y_data, z_data):
         """Updates the graph dynamically with new data."""
@@ -37,11 +38,3 @@ class Graph3D:
         """Starts the application loop."""
         self.app.exec_()
 
-# Test the 3D graph directly
-if __name__ == "__main__":
-    graph = Graph3D("Random 3D Points")
-    x = np.random.rand(100)
-    y = np.random.rand(100)
-    z = np.random.rand(100)
-    graph.set_data(x, y, z)
-    graph.start()
