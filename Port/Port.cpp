@@ -7,6 +7,7 @@
  * their number, protocol, status, and description.
  * 
  * @author Hasan Kayan
+ * @github hasan-kayan
  * @date 2024-09-25
  */
 
@@ -46,11 +47,13 @@
  * This function outputs the port number, protocol, status, and description
  * to the standard output stream.
  */
+
+// INCLUDES
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <stdexcept>
-
+#include "Port.h"   
 struct Port {
     int portNumber;           // Port number (e.g., 80, 443)
     std::string protocol;     // Protocol type (e.g., "TCP", "UDP")
@@ -127,33 +130,3 @@ struct Port {
     }
 };
 
-int main() {
-    try {
-        // Create and test the Port object
-        Port httpPort(80, "TCP", "open", "HTTP port for web traffic");
-        httpPort.printPortInfo();
-
-        // Test writing data
-        std::cout << "\nWriting Port Info to Stream:\n";
-        std::ostringstream oss;
-        httpPort.writeData(oss);
-        std::cout << oss.str() << "\n";
-
-        // Test reading data
-        std::cout << "\nReading Port Data from Input Stream:\n";
-        std::istringstream iss("443 TCP open HTTPS port for secure web traffic");
-        Port httpsPort(0, "", "", "");
-        httpsPort.readData(iss);
-        httpsPort.printPortInfo();
-
-        // Test serial connection creation
-        std::cout << "\nTesting Serial Connection:\n";
-        std::string connectionMessage = httpsPort.createSerialConnection(443);
-        std::cout << connectionMessage << "\n";
-
-    } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
-
-    return 0;
-}
