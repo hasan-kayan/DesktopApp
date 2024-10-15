@@ -7,7 +7,7 @@
  * their number, protocol, status, and description.
  * 
  * @author Hasan Kayan
- * @date 2023
+ * @date 2024-09-25
  */
 
 /**
@@ -47,7 +47,9 @@
  * to the standard output stream.
  */
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <stdexcept>
 
 struct Port {
     int portNumber;           // Port number (e.g., 80, 443)
@@ -60,18 +62,13 @@ struct Port {
         : portNumber(number), protocol(proto), status(stat), description(desc) {}
 
     // Method to display port information
-    /**
-     * @brief Prints the information of the port.
-     * 
-     * This function outputs the port number, protocol, status, and description
-     * to the standard output stream.
-     */
     void printPortInfo() const {
         std::cout << "Port Number: " << portNumber << "\n"
                   << "Protocol: " << protocol << "\n"
                   << "Status: " << status << "\n"
                   << "Description: " << description << "\n";
     }
+
     /**
      * @brief Reads data from the given input stream and assigns it to the member variables.
      * 
@@ -79,10 +76,18 @@ struct Port {
      * member variables `portNumber`, `protocol`, `status`, and `description`.
      * 
      * @param in The input stream from which data is read.
+     * @throw std::runtime_error If reading fails or input format is invalid.
      */
-    void readData (std::istream& in) {
-        in >> portNumber >> protocol >> status >> description;
+    void readData(std::istream& in) {
+        if (!(in >> portNumber >> protocol >> status)) {
+            throw std::runtime_error("Error reading port data: Invalid input format.");
+        }
+        std::getline(in >> std::ws, description); // Read the rest of the line as description
+        if (description.empty()) {
+            throw std::runtime_error("Error reading port data: Description cannot be empty.");
+        }
     }   
+
     /**
      * @brief Writes the port details to the given output stream.
      * 
@@ -90,27 +95,19 @@ struct Port {
      * to the provided output stream in a space-separated format.
      * 
      * @param out The output stream to which the port details will be written.
+     * @throw std::runtime_error If writing to the output stream fails.
      */
-    void writeData (std::ostream& out) const {
-        out << portNumber << " " << protocol << " " << status << " " << description;
+    void writeData(std::ostream& out) const {
+        if (!(out << portNumber << " " << protocol << " " << status << " " << description)) {
+            throw std::runtime_error("Error writing port data: Failed to output data.");
+        }
     }
 
-    /**
-     * @brief Overloads the << operator to output the Port object to an output stream.
-     * 
-     * This friend function allows the Port object to be output to an std::ostream
-     * by calling the writeData method of the Port class.
-     * 
-     * @param out The output stream to which the Port object will be written.
-     * @param port The Port object to be written to the output stream.
-     * @return std::ostream& The output stream after writing the Port object.
-     */
-    friend std::ostream& operator<< (std::ostream& out, const Port& port) {
+    friend std::ostream& operator<<(std::ostream& out, const Port& port) {
         port.writeData(out);
         return out;
     }
 
-    // Create serial port connection to the given port number
     /**
      * @brief Creates a serial port connection to the specified port number.
      * 
@@ -122,7 +119,41 @@ struct Port {
      * @return std::string A status message indicating the success or failure of the connection.
      */
     std::string createSerialConnection(int portNumber) {
+        if (portNumber < 1 || portNumber > 65535) {
+            throw std::invalid_argument("Invalid port number: Port number must be between 1 and 65535.");
+        }
         // Code to create serial port connection
         return "Serial connection established on port " + std::to_string(portNumber);
     }
 };
+
+int main() {
+    try {
+        // Create and test the Port object
+        Port httpPort(80, "TCP", "open", "HTTP port for web traffic");
+        httpPort.printPortInfo();
+
+        // Test writing data
+        std::cout << "\nWriting Port Info to Stream:\n";
+        std::ostringstream oss;
+        httpPort.writeData(oss);
+        std::cout << oss.str() << "\n";
+
+        // Test reading data
+        std::cout << "\nReading Port Data from Input Stream:\n";
+        std::istringstream iss("443 TCP open HTTPS port for secure web traffic");
+        Port httpsPort(0, "", "", "");
+        httpsPort.readData(iss);
+        httpsPort.printPortInfo();
+
+        // Test serial connection creation
+        std::cout << "\nTesting Serial Connection:\n";
+        std::string connectionMessage = httpsPort.createSerialConnection(443);
+        std::cout << connectionMessage << "\n";
+
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+
+    return 0;
+}
