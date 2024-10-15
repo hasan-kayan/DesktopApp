@@ -12,6 +12,15 @@ public:
         serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
         serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
     }
+
+    void write(const std::string& data) {
+        boost::asio::write(serial, boost::asio::buffer(data));
+    }
+    void deletePort() {
+        serial.close();
+    }
+
+
    
 private:
     boost::asio::io_service io;
