@@ -85,20 +85,86 @@ public:
         serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
     }
 
+    /**
+     * @brief Writes data to the serial port.
+     * 
+     * This function sends the provided string data to the serial port using
+     * Boost.Asio's write functionality.
+     * 
+     * @param data The string data to be written to the serial port.
+     */
     void write(const std::string& data) {
         boost::asio::write(serial, boost::asio::buffer(data));
     }
 
+    /**
+     * @brief Reads data from the serial port.
+     * 
+     * This function reads up to 1024 bytes of data from the serial port into a buffer
+     * and returns it as a std::string.
+     * 
+     * @return std::string The data read from the serial port.
+     */
     std::string read() {
         char buf[1024];
         boost::asio::read(serial, boost::asio::buffer(buf, 1024));
         return std::string(buf);
     }
 
+    /**
+     * @brief Closes the serial port connection.
+     * 
+     * This function closes the serial port connection by calling the 
+     * close method on the serial object. It should be called when 
+     * the serial communication is no longer needed to free up resources.
+     */
     void close() {
         serial.close();
     }
-
+    /**
+     * @brief Scans all possible serial ports and prints the names of the found ports.
+     * 
+     * This function iterates through a range of possible serial port names (from /dev/ttyUSB0 to /dev/ttyUSB255)
+     * and attempts to open each one using Boost.Asio's serial_port class. If a port is successfully opened, it is
+     * immediately closed and its name is printed to the standard output. If a port cannot be opened, it is assumed
+     * to not exist and the function continues to the next port.
+     * 
+     * @note This function is specific to Unix-like systems where serial ports are named /dev/ttyUSB*.
+     */
+    void scanAllPorts() {
+        for (int i = 0; i < 256; i++) {
+            std::string port_name = "/dev/ttyUSB" + std::to_string(i);
+            try {
+                boost::asio::serial_port serial(io, port_name);
+                serial.close();
+                std::cout << "Found port: " << port_name << std::endl;
+            } catch (const boost::system::system_error& e) {
+                // Port not found
+            }
+        }
+    }
+    /**
+     * @brief Checks the status of all possible serial ports.
+     * 
+     * This function iterates through all possible serial port names from /dev/ttyUSB0 to /dev/ttyUSB255.
+     * For each port, it attempts to open and then immediately close the port to check if it exists.
+     * If the port is found, it prints the port name to the standard output.
+     * If the port is not found, it catches the exception and continues to the next port.
+     * 
+     * @note This function uses the Boost.Asio library for serial port operations.
+     */
+    void checkStatusOfAllPorts(){
+        for (int i = 0; i < 256; i++) {
+            std::string port_name = "/dev/ttyUSB" + std::to_string(i);
+            try {
+                boost::asio::serial_port serial(io, port_name);
+                serial.close();
+                std::cout << "Found port: " << port_name << std::endl;
+            } catch (const boost::system::system_error& e) {
+                // Port not found
+            }
+        }
+    }
 private:
     boost::asio::io_service io;
     boost::asio::serial_port serial;
