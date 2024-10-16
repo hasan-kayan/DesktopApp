@@ -14,7 +14,7 @@ int main() {
     httpPort.writeData(oss);
     std::cout << "Written Data: " << oss.str() << "\n";
 
-    // Test reading data from an input stream
+    // Test reading data from an input stream  
     std::cout << "\nTesting Reading Port Data from Input Stream:\n";
     std::istringstream iss("443 TCP open HTTPS port for secure web traffic");
     Port httpsPort(0, "", "", "");
